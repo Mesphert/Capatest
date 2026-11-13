@@ -13,3 +13,7 @@ li { background:var(--card); border-radius:12px; padding:12px 14px; display:flex
 li.past { opacity:.45; }
 li small { display:block; color:var(--muted); margin-top:2px; }
 li button { background:transparent; color:var(--danger); padding:6px 10px; border:1px solid #2a2f3a; }
+li .cd { color: var(--accent); font-variant-numeric: tabular-nums; font-weight: 600; }
+input[type="datetime-local"] { display: block; -webkit-appearance: none; appearance: none; min-height: 48px; text-align: left; }
+input[type="datetime-local"]::-webkit-date-and-time-value { text-align: left; }
+.card input, .card button { width: 100%; min-width: 0; }

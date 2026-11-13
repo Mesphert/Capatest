@@ -33,6 +33,8 @@ async function schedule(r) {
         id: r.id,
         title: r.title,
         body: `Scheduled for ${at.toLocaleString()}`,
+        smallIcon: 'ic_stat_icon',
+        largeIcon: 'ic_large_logo',
         schedule: { at, allowWhileIdle: true },
       }],
     });
@@ -53,7 +55,7 @@ function render() {
   load().sort((a, b) => a.at - b.at).forEach((r) => {
     const li = document.createElement('li');
     if (r.at <= now) li.className = 'past';
-    li.innerHTML = `<div>${r.title.replace(/</g, '&lt;')}<small>${new Date(r.at).toLocaleString()}</small></div>`;
+    li.innerHTML = `<div>${r.title.replace(/</g, '&lt;')}<small>${new Date(r.at).toLocaleString()}</small><small class="cd" data-at="${r.at}"></small></div>`;
     const del = document.createElement('button');
     del.textContent = 'Delete';
     del.onclick = async () => {
@@ -64,7 +66,30 @@ function render() {
     li.appendChild(del);
     list.appendChild(li);
   });
+  tick();
 }
+
+function fmt(ms) {
+  let s = Math.floor(ms / 1000);
+  const d = Math.floor(s / 86400); s %= 86400;
+  const h = Math.floor(s / 3600); s %= 3600;
+  const m = Math.floor(s / 60); s %= 60;
+  const p = (n) => String(n).padStart(2, '0');
+  return (d ? `${d}d ` : '') + `${p(h)}:${p(m)}:${p(s)}`;
+}
+
+function tick() {
+  document.querySelectorAll('.cd').forEach((el) => {
+    const left = Number(el.dataset.at) - Date.now();
+    if (left <= 0) {
+      el.textContent = 'Time reached';
+      el.closest('li').classList.add('past');
+    } else {
+      el.textContent = 'In ' + fmt(left);
+    }
+  });
+}
+setInterval(tick, 1000);
 
 $('add').onclick = async () => {
   const title = $('title').value.trim() || 'Reminder';

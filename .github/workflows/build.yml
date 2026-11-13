@@ -28,6 +28,16 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
+      - name: Generate launcher icons from assets/icon.png
+        run: |
+          npm i -D @capacitor/assets
+          npx capacitor-assets generate --android
+
+      - name: Add notification icons
+        run: |
+          mkdir -p android/app/src/main/res/drawable
+          cp resources/ic_stat_icon.png resources/ic_large_logo.png android/app/src/main/res/drawable/
+
       - name: Add exact alarm permission
         run: |
           sed -i 's|<application|<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>\n    <application|' android/app/src/main/AndroidManifest.xml
